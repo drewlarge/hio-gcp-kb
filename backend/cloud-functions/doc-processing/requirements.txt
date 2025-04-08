@@ -1,0 +1,6 @@
+# Function dependencies:
+functions-framework==3.*
+google-cloud-documentai>=2.11.0
+google-cloud-vision>=3.1.0
+# Add google-cloud-storage if interacting directly with buckets here
+# google-cloud-storage>=2.7.0 

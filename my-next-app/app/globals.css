@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Google Fonts - Roboto and Roboto Condensed */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap');
+
+body {
+  @apply font-sans;
+  /* Tailwind applies base background and text colors. */
+  /* Custom colors like hio-blue, hio-green are available as utilities e.g., bg-hio-blue, text-hio-green */
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

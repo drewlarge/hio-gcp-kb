@@ -1,0 +1,172 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## Project Overview
+
+*   **Type:** cursor_project_rules
+*   **Description:** I want to build a real estate knowledge base in GCP that integrates AI/ML tools to deliver custom LLM-powered insights via chatbots, web apps, and mobile apps, utilizing Supabase, Cloud Storage, and various GCP services (Vertex AI, Document AI, Cloud Vision, Cloud Functions, Cloud Run, API Gateway) as well as Next.js and Flutter frontends.
+*   **Primary Goal:** Build a comprehensive, scalable, and secure real estate knowledge base that leverages advanced AI/ML capabilities to process diverse data types (property listings, legal documents, images, transaction histories, etc.) and deliver tailored, context-rich insights through multiple platforms (web, mobile, chatbot).
+
+## Project Structure
+
+### Framework-Specific Routing
+
+*   **Directory Rules:**
+
+    *   **next.js 14 (App Router):** Enforce use of the `app/` directory with nested route folders (e.g., `app/[route]/page.tsx`).
+    *   **Example 1:** Next.js 14 (App Router) → `app/[route]/page.tsx` conventions
+    *   **Example 2:** Next.js (Pages Router) → `pages/[route].tsx` pattern *(Not applicable here as we enforce App Router)*
+    *   **Example 3:** React Router 6 → Use `src/routes/` with `createBrowserRouter` *(For potential React integrations, if applicable)*
+
+### Core Directories
+
+*   **Versioned Structure:**
+
+    *   **app/api:** Next.js 14 API routes implemented via Route Handlers in the `app/` directory.
+    *   **src/views:** For any component-based views (if leveraging React patterns outside Next.js) or for Flutter widget organization in separate module directories.
+
+### Key Files
+
+*   **Stack-Versioned Patterns:**
+
+    *   **app/dashboard/layout.tsx:** Defines Next.js 14 root layouts for the web interface.
+    *   **pages/_app.js:** Would be used if employing the older Pages Router approach *(not applicable as we enforce App Router)*
+    *   **backend/function.js:** Example for Cloud Functions usage handling REST API endpoints.
+
+## Tech Stack Rules
+
+*   **Version Enforcement:**
+
+    *   **next@14:** Enforce usage of the App Router with an `app/` directory structure; avoid `getInitialProps` in favor of Server Actions and Route Handlers.
+    *   **flutter@latest:** Follow Flutter best practices for responsive, widget-based UI design and cross-platform consistency.
+    *   **cloud_functions@GCP:** Ensure stateless, event-driven functions with proper error handling and logging.
+    *   **cloud_run@GCP:** Use container orchestration best practices with auto-scaling and service isolation.
+    *   **api_gateway@GCP:** Secure all endpoints with rate limiting, TLS encryption, and proper routing rules.
+
+## PRD Compliance
+
+*   **Non-Negotiable:**
+
+    *   "This project is about building a comprehensive real estate knowledge base hosted in Google Cloud Platform (GCP) that leverages AI/ML tools to power a custom large language model (LLM)." — All version-specific constraints and integration requirements for GCP services, Supabase, and modern frontend frameworks must be strictly adhered to.
+
+## App Flow Integration
+
+*   **Stack-Aligned Flow:**
+
+    *   Example: "Next.js 14 Auth Flow → `app/auth/login/page.tsx` uses server actions for authentication and secure routing to ensure immediate user feedback and role-appropriate data access."
+
+## Best Practices
+
+*   **next.js**
+
+    *   Use the App Router (`app/` directory) for dynamic routing and leveraging Server Components.
+    *   Optimize for server-side rendering and static site generation where applicable.
+    *   Maintain clear separation between layout and view components.
+
+*   **flutter**
+
+    *   Utilize widget encapsulation for responsive design.
+    *   Follow best practices for state management (e.g., Provider, Riverpod, or Bloc).
+    *   Emphasize cross-platform consistency and performance optimizations.
+
+*   **cloud_functions**
+
+    *   Write stateless, modular functions with proper error handling.
+    *   Use environment variables and secrets management for secure operations.
+    *   Monitor function performance and set appropriate timeout limits.
+
+*   **cloud_run**
+
+    *   Containerize applications using best practices (e.g., minimal base images and layered caching).
+    *   Configure auto-scaling based on request load.
+    *   Implement health checks and logging for rapid troubleshooting.
+
+*   **api_gateway**
+
+    *   Secure endpoints with TLS, authentication, and rate limiting.
+    *   Document API contracts clearly for maintainability.
+    *   Use consistent routing patterns to interface seamlessly with backend services.
+
+*   **supabase**
+
+    *   Enforce Row-Level Security (RLS) to control data access.
+    *   Maintain structured schemas aligned with project data categories.
+    *   Regularly audit and monitor access patterns for security compliance.
+
+*   **cloud_storage**
+
+    *   Organize data using clear bucket naming conventions and folder structures.
+    *   Set lifecycle policies and access controls for data sensitivity.
+    *   Use versioning and backup strategies to prevent data loss.
+
+*   **vertex_ai**
+
+    *   Monitor model training and deployment with continuous integration testing.
+    *   Leverage built-in explainability tools to refine model outputs.
+    *   Ensure that data pipelines feeding the model are robust and well-documented.
+
+*   **document_ai**
+
+    *   Establish robust error handling for document parsing failures.
+    *   Regularly update extraction rules to account for new document formats.
+    *   Integrate manual review steps for unstructured data anomalies.
+
+*   **cloud_vision**
+
+    *   Optimize image resolution and pre-processing for accurate interpretation.
+    *   Use caching and rate limiting to manage API calls efficiently.
+    *   Validate outputs with secondary checks when processing critical images.
+
+*   **dialogflow_cx**
+
+    *   Design conversational flows with clear intents and fallback mechanisms.
+    *   Regularly update training phrases to improve natural language understanding.
+    *   Integrate securely with backend services via API Gateway.
+
+*   **vision_api**
+
+    *   Implement efficient image labeling and OCR practices.
+    *   Monitor API usage to prevent overuse and ensure consistent performance.
+    *   Sync with Cloud Vision best practices for complementary image analysis.
+
+*   **bigquery_ml**
+
+    *   Optimize SQL queries for large-scale data analysis.
+    *   Use partitioning and clustering to enhance query performance.
+    *   Regularly analyze query costs and performance metrics.
+
+*   **palm_api**
+
+    *   Monitor generative AI responses for consistency and context relevance.
+    *   Ensure secure API keys and manage request quotas vigilantly.
+    *   Provide fallback mechanisms in case of downstream service failures.
+
+*   **gemini_2-5**
+
+    *   Leverage advanced coding insights from Cursor IDE integration.
+    *   Validate model outputs against real-world data scenarios.
+    *   Continuously update integration patterns as new best practices emerge.
+
+## Rules
+
+*   Derive folder/file patterns directly from tech_stack version requirements (e.g., enforcing the `app/` directory for Next.js 14 App Router projects).
+*   If Next.js 14 App Router is used, ensure that all routes are nested within `app/` and avoid mixing with legacy `pages/` structures.
+*   For Flutter and backend services, maintain clear separation of concerns by having dedicated directories for UI components, API services, and data management.
+*   Always follow the version-specific routing and file patterns as outlined in the tech stack documentation; do not combine patterns from different versions (e.g., no `pages/` in an App Router project).
+
+## Rules Metrics
+
+Before starting the project development, create a metrics file in the root of the project called `cursor_metrics.md`.
+
+### Instructions:
+
+*   Each time a cursor rule is used as context, update `cursor_metrics.md`.
+
+*   Use the following format for `cursor_metrics.md:` Rules Metrics Usage The number of times rules is used as context
+
+    *   rule-name.mdc: 5
+    *   another-rule.mdc: 2
+    *   ...other rules
+
