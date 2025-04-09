@@ -1,38 +1,49 @@
-// TODO: Replace with actual API Gateway endpoint
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_GATEWAY_URL || 'http://localhost:3001/api'; // Default for local dev
+// Use the environment variable defined in Vercel (or .env.local for development)
+const API_GATEWAY_BASE_URL = process.env.NEXT_PUBLIC_API_GATEWAY_URL;
 
 /**
- * Placeholder function to simulate fetching data from the backend.
- * Replace with actual API call logic.
+ * Submits a query to the backend LLM via the API Gateway.
  */
 export async function submitQuery(query: string): Promise<any> {
-  console.log(`Submitting query to backend: ${query}`);
-  // Example structure for a POST request
-  try {
-    // const response = await fetch(`${API_BASE_URL}/llm-query`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ query }),
-    // });
-    // if (!response.ok) {
-    //   throw new Error(`API request failed with status ${response.status}`);
-    // }
-    // const data = await response.json();
-    // return data;
+  if (!API_GATEWAY_BASE_URL) {
+    throw new Error("API Gateway URL is not configured. Set NEXT_PUBLIC_API_GATEWAY_URL environment variable.");
+  }
 
-    // --- Mock Response for now ---
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
-    return {
-      response: `Mock response for query: "${query}"`,
-      sources: ['doc1.pdf', 'website.com/article'],
-    };
-    // --- End Mock Response ---
+  // Construct the full endpoint URL
+  // Our OpenAPI spec defines the path as /query
+  const endpoint = `${API_GATEWAY_BASE_URL}/query`;
+
+  console.log(`Submitting query to backend: ${query} at ${endpoint}`);
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    if (!response.ok) {
+      // Attempt to read error details from the response body
+      let errorBody = 'Unknown error';
+      try {
+        errorBody = await response.text();
+      } catch (parseError) {
+        // Ignore if the body cannot be parsed
+      }
+      console.error(`API request failed: ${response.status} ${response.statusText}`, errorBody);
+      throw new Error(`API request failed with status ${response.status}: ${errorBody}`);
+    }
+
+    const data = await response.json();
+    console.log("Received response from backend:", data);
+    return data;
 
   } catch (error) {
     console.error("Error submitting query:", error);
-    throw error; // Re-throw the error to be handled by the caller
+    // Re-throw the error to be handled by the caller (e.g., UI)
+    throw error;
   }
 }
 

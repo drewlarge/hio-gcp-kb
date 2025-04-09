@@ -1,50 +1,53 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show kDebugMode; // To check if running in debug mode
 
-// TODO: Replace with actual API Gateway endpoint from environment variable or config
-const String _apiBaseUrl = String.fromEnvironment(
+// Use environment variable (passed via --dart-define=API_GATEWAY_URL=...) for production,
+// otherwise default to the deployed gateway URL for easier debug/dev builds.
+const String _apiGatewayBaseUrl = String.fromEnvironment(
   'API_GATEWAY_URL',
-  defaultValue: 'http://localhost:3001/api', // Default for local dev
+  // Default value points to the deployed gateway
+  defaultValue: 'https://real-estate-kb-gateway-3figwaat.ue.gateway.dev',
 );
 
 class ApiService {
   /**
-   * Placeholder function to simulate submitting a query to the backend.
-   * Replace with actual API call logic.
+   * Submits a query to the backend LLM via the API Gateway.
    */
   Future<Map<String, dynamic>> submitQuery(String query) async {
-    print('Submitting query to backend: $query');
-    final Uri queryUri = Uri.parse('$_apiBaseUrl/llm-query');
+    // Our OpenAPI spec defines the path as /query
+    final Uri queryUri = Uri.parse('$_apiGatewayBaseUrl/query');
+
+    if (kDebugMode) {
+      print('Submitting query to backend: $query at $queryUri');
+    }
 
     try {
-      // final response = await http.post(
-      //   queryUri,
-      //   headers: {
-      //     'Content-Type': 'application/json; charset=UTF-8',
-      //   },
-      //   body: jsonEncode(<String, String>{
-      //     'query': query,
-      //   }),
-      // );
+      final response = await http.post(
+        queryUri,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'query': query,
+        }),
+      );
 
-      // if (response.statusCode == 200) {
-      //   return jsonDecode(response.body) as Map<String, dynamic>;
-      // } else {
-      //   print('API request failed with status ${response.statusCode}');
-      //   print('Response body: ${response.body}');
-      //   throw Exception('Failed to submit query. Status code: ${response.statusCode}');
-      // }
-
-      // --- Mock Response for now ---
-      await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
-      return {
-        'response': 'Mock response for query: "$query" from Flutter',
-        'sources': ['doc_flutter.pdf', 'flutter_website.com/article'],
-      };
-      // --- End Mock Response ---
-
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        if (kDebugMode) {
+          print('Received response from backend: $data');
+        }
+        return data;
+      } else {
+        print('API request failed with status ${response.statusCode}');
+        print('Response body: ${response.body}');
+        // Consider creating custom exception types
+        throw Exception('Failed to submit query. Status code: ${response.statusCode}');
+      }
     } catch (e) {
       print('Error submitting query: $e');
+      // Re-throw the error to be handled by the caller (e.g., UI)
       throw Exception('Failed to submit query: $e');
     }
   }
